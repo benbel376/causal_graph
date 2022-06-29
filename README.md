@@ -56,7 +56,7 @@ Data can be found [here](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+W
 
 ## Author
 
-👤 **Michael Tamirie**
+👤 **Biniyam Belayneh**
 
 - GitHub: [Biniyam_Belayneh](https://github.com/benbel376)
 - LinkedIn: [Biniyam_Belayneh](https://www.linkedin.com/in/biniyam-belayneh-demisse-42909617a/)
