@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import Normalizer, MinMaxScaler
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
@@ -136,12 +137,12 @@ class Utils:
             normScaled: a dataframe with scaled and normalized variables 
         """
         columns = df.columns.to_list()
-        normScaled = normalize(scale(df))
+        normScaled = self.normalize(self.scale(df))
         normScaled.columns = columns
         return normScaled
 
 
-    def corr(x, y, **kwargs):
+    def corr(self, x, y, **kwargs):
         """
         calculates a correlation between two variables
 
@@ -160,7 +161,7 @@ class Utils:
         ax = plt.gca()
         ax.annotate(label, xy = (0.2, 0.95), size = 11, xycoords = ax.transAxes)
         
-    def plot_pair(df, range, size):
+    def plot_pair(self, df, range, size):
         """
         generates a pair plot that shows distribution of one variable and 
         its relationship with other variables using scatter plot.
@@ -176,7 +177,7 @@ class Utils:
         data = pd.concat([target,data.iloc[:,range[0]:range[1]]],axis=1)
         plt.figure(figsize=(size[0],size[1]))
         grid=sns.pairplot(data=data,kind ="scatter",hue="diagnosis",palette="Set1")
-        grid = grid.map_upper(corr)
+        grid = grid.map_upper(self.corr)
 
 
     
@@ -193,12 +194,12 @@ class Utils:
         """
         # correlation matrix
         if range is None:
-            corr_matrix = clean_df.corr()
+            corr_matrix = df.corr()
         else:
             if(range[1] == -10):
-                corr_matrix = clean_df.iloc[:,range[0]:].corr()
+                corr_matrix = df.iloc[:,range[0]:].corr()
             else:
-                corr_matrix = clean_df.iloc[:,range[0]:range[1]].corr()
+                corr_matrix = df.iloc[:,range[0]:range[1]].corr()
         matrix = np.triu(corr_matrix)
         fig, ax = plt.subplots(figsize=(size[0], size[1]))
         ax = sns.heatmap(corr_matrix, annot=True, mask=matrix)
