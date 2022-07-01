@@ -103,11 +103,24 @@ class Utils:
         return normal
 
     def scale(self, df):
+        """
+        scale variables using min-max scaler to bring all values between 0 and 1
+        for each of the variables.
+
+        Args:
+            df: a dataframe that holds only numerical variables
+
+        Returns:
+            scaled: a dataframe with scaled variables.
+        """
         scaler = MinMaxScaler()
         scaled = pd.DataFrame(scaler.fit_transform(df))
         return scaled
 
     def scale_and_normalize(self, df):
+        """
+        
+        """
         columns = df.columns.to_list()
         normScaled = normalize(scale(df))
         normScaled.columns = columns
