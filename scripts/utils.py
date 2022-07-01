@@ -139,7 +139,36 @@ class Utils:
         columns = df.columns.to_list()
         normScaled = self.normalize(self.scale(df))
         normScaled.columns = columns
+
         return normScaled
+
+
+    def remove_correlated(self, df, th):
+        """
+        removes highly correlated variables from a dataframe.
+
+        Args:
+            df: a features dataframe that holds the variables
+            th: a threshold correlation value to decide which variables to remove
+
+        Return:
+            features_df: a new features dataframe with low correlation values. 
+        """
+        corrmat = df.corr()
+        correlated_features = set()
+        for i in range(len(corrmat.columns)):
+            for j in range(i):
+                if abs(corrmat.iloc[i, j]) >= th:
+                    colname = corrmat.columns[i]
+                    correlated_features.add(colname)
+
+        print(f"number of correlated variables: {len(correlated_features)}")
+        print("..................................................")
+        print("correlated features: ", correlated_features)
+
+        features_df = df.drop(labels=correlated_features, axis=1)
+
+        return features_df
 
 
     def corr(self, x, y, **kwargs):
