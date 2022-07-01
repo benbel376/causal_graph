@@ -177,3 +177,28 @@ class Utils:
         plt.figure(figsize=(size[0],size[1]))
         grid=sns.pairplot(data=data,kind ="scatter",hue="diagnosis",palette="Set1")
         grid = grid.map_upper(corr)
+
+
+    
+    def show_corr(self, df, size=[17,10], range=None):
+        """
+        plots a correlation matrix heatmap
+
+        Args:
+            df: dataframe that holds the data
+            size: size of the chart to be plotted
+            range: the range of columns or variables to include in the chart
+
+        Returns: None
+        """
+        # correlation matrix
+        if range is None:
+            corr_matrix = clean_df.corr()
+        else:
+            if(range[1] == -10):
+                corr_matrix = clean_df.iloc[:,range[0]:].corr()
+            else:
+                corr_matrix = clean_df.iloc[:,range[0]:range[1]].corr()
+        matrix = np.triu(corr_matrix)
+        fig, ax = plt.subplots(figsize=(size[0], size[1]))
+        ax = sns.heatmap(corr_matrix, annot=True, mask=matrix)
