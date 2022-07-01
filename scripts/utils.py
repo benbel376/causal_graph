@@ -222,6 +222,47 @@ class Utils:
         print(f"accuracy score: {forest.score(X_Test, Y_Test)}")
 
 
+    def apply_treshold(sm, th):
+        """
+        removes edges from a structure model based on provided treshold value
+
+        Args:
+            sm: causalnex structure model with nodes and edges
+            th: a weight treshold to use as a reference to remove edges
+
+        Return:
+            sm_copy: a new causalnex structure model with some  week edges removed.
+        
+        """
+        sm_copy = copy.deepcopy(sm)
+        sm_copy.remove_edges_below_threshold(th)
+
+        return sm_copy
+    
+    def plot_graph(sm, th):
+        tmp = apply_treshold(sm, th)
+        viz = plot_structure(
+            tmp,
+            graph_attributes={"scale": "2.5", 'size': 2},
+            all_node_attributes=NODE_STYLE.WEAK,
+            all_edge_attributes=EDGE_STYLE.WEAK)
+        return Image(viz.draw(format='png'))
+
+    def jacc_index(sm1, sm2, th1, th2, formatted=True):
+        sm1_copy = copy.deepcopy(sm1)
+        sm2_copy = copy.deepcopy(sm2)
+        sm1_copy.remove_edges_below_threshold(th1)
+        sm2_copy.remove_edges_below_threshold(th2)
+        a = sm1_copy.edges
+        b = sm2_copy.edges
+        n = set(a).intersection(b)
+        sim = round(len(n) / (len(a) + len(b) - len(n)), 2)
+        if(formatted):
+            return f"The similarity index: {sim}"
+        else:
+            return sim 
+
+
     def corr(self, x, y, **kwargs):
         """
         calculates a correlation between two variables
