@@ -71,3 +71,35 @@ class Utils:
         outlier_df = pd.DataFrame(outlier_dict)
 
         return outlier_df
+
+
+    def describe(self, df):
+        """
+        generates basic statistical information like mean, median, quartiles and others
+
+        Args: 
+            df: a dataframe that holds only numerical variables
+
+        Returns:
+            description: a dataframe that holds statistical information about the variables
+        """
+        description = df.describe().T.style.bar(subset=['mean'], color='#205ff2')\
+                            .background_gradient(subset=['std'], cmap='Reds')\
+                            .background_gradient(subset=['50%'], cmap='coolwarm')
+        return description
+
+    def normalize(self, df):
+        normald = Normalizer()
+        normal = pd.DataFrame(normald.fit_transform(df))
+        return normal
+
+    def scale(self, df):
+        scaler = MinMaxScaler()
+        scaled = pd.DataFrame(scaler.fit_transform(df))
+        return scaled
+
+    def scale_and_normalize(self, df):
+        columns = df.columns.to_list()
+        normScaled = normalize(scale(df))
+        normScaled.columns = columns
+        return normScaled
