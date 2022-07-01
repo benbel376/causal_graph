@@ -4,22 +4,23 @@ from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
-import pickle
-import cdt
-import networkx as nx
 
 class Utils:
     
     def __init__(self):
         pass
-    
+
     def check_outlier(self, df):
         """
+        calculates number of outliers found in each column of specified dataframe
+        using interquiratile method
+
         Args:
-            df: a pandas dataframe with numeric columns only.
-            
+            df: a dataframe with only numerical values
+        
         Returns:
-            a list of outliers
+            a new dataframe with a count of minor and major outliers
+        
         """
         tmp_info = df.describe()
 
@@ -40,10 +41,10 @@ class Utils:
         Outer_Low = Q1-H_factor
         Outer_High = Q3+H_factor
         outer_fence = [Outer_Low, Outer_High]
-
+        
         outliers = []
         for col_index in range(df.shape[1]):
-
+            
             inner_count = 0
             outer_count = 0
             tmp_list = df.iloc[:,col_index].tolist()
@@ -54,5 +55,19 @@ class Utils:
                     outer_count = outer_count + 1
 
             outliers.append({df.columns[col_index]:[inner_count, outer_count]})
+        
+        major_outlier = []
+        minor_outlier = []
+        columns = []
+        outlier_dict = {}
+        for item in outliers:
+            columns.append(list(item.keys())[0])
+            minor_outlier.append(list(item.values())[0][0])
+            major_outlier.append(list(item.values())[0][1])
 
-        return outliers
+        outlier_dict["columns"] = columns
+        outlier_dict["minor_outlier"] = minor_outlier
+        outlier_dict["major_outlier"] = major_outlier
+        outlier_df = pd.DataFrame(outlier_dict)
+
+        return outlier_df
