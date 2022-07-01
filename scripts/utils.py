@@ -222,7 +222,7 @@ class Utils:
         print(f"accuracy score: {forest.score(X_Test, Y_Test)}")
 
 
-    def apply_treshold(sm, th):
+    def apply_treshold(self, sm, th):
         """
         removes edges from a structure model based on provided treshold value
 
@@ -239,7 +239,7 @@ class Utils:
 
         return sm_copy
     
-    def plot_graph(sm, th, title, name=None, save=False):
+    def plot_graph(self, sm, th, title, name=None, save=False):
         """
         plots a structure model or causal graph by not including edges below the th.
 
@@ -252,7 +252,7 @@ class Utils:
 
         """
         path = f"../data/images/{name}"
-        tmp = apply_treshold(sm, th)
+        tmp = self.apply_treshold(sm, th)
         viz = plot_structure(
             tmp,
             title=title,
@@ -267,7 +267,9 @@ class Utils:
 
         return img
 
-    def jacc_index(sm1, sm2, th1, th2, formatted=True):
+
+
+    def jacc_index(self, sm1, sm2, th1, th2, formatted=True):
         """
         calculates jaccard similarity index between two causal graphs.
 
@@ -331,14 +333,16 @@ class Utils:
         data = df.iloc[:,1:]
         data = pd.concat([target,data.iloc[:,range[0]:range[1]]],axis=1)
         plt.figure(figsize=(size[0],size[1]))
-        plt.title(title)
         grid=sns.pairplot(data=data,kind ="scatter",hue="diagnosis",palette="Set1")
+        grid.fig.suptitle(title)
         grid = grid.map_upper(self.corr)
         
 
         if(save):
             path = f"../data/images/{name}"
             plt.savefig(path)
+
+        plt.show()
 
 
     
@@ -385,6 +389,7 @@ class Utils:
 
         Returns: None
         """
+        df = df.copy()
         df.iloc[:,1:] = self.scale_and_normalize(df.iloc[:,1:]) 
         data = pd.concat([df.iloc[:,:]],axis=1)
         data = pd.melt(data,id_vars="diagnosis",
