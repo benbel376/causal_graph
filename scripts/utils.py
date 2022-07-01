@@ -73,6 +73,7 @@ class Utils:
         return outlier_df
 
 
+
     def describe(self, df):
         """
         generates basic statistical information like mean, median, quartiles and others
@@ -86,7 +87,10 @@ class Utils:
         description = df.describe().T.style.bar(subset=['mean'], color='#205ff2')\
                             .background_gradient(subset=['std'], cmap='Reds')\
                             .background_gradient(subset=['50%'], cmap='coolwarm')
+
         return description
+
+
 
     def normalize(self, df):
         """
@@ -100,7 +104,9 @@ class Utils:
         """
         normald = Normalizer()
         normal = pd.DataFrame(normald.fit_transform(df))
+
         return normal
+
 
     def scale(self, df):
         """
@@ -115,6 +121,7 @@ class Utils:
         """
         scaler = MinMaxScaler()
         scaled = pd.DataFrame(scaler.fit_transform(df))
+
         return scaled
 
     def scale_and_normalize(self, df):
@@ -132,3 +139,41 @@ class Utils:
         normScaled = normalize(scale(df))
         normScaled.columns = columns
         return normScaled
+
+
+    def corr(x, y, **kwargs):
+        """
+        calculates a correlation between two variables
+
+        Args:
+            x: a list of values
+            y: a list of values
+
+        Returns: nothing
+        """
+        # Calculate the value
+        coef = np.corrcoef(x, y)[0][1]
+        # Make the label
+        label = r'$\rho$ = ' + str(round(coef, 2))
+        
+        # Add the label to the plot
+        ax = plt.gca()
+        ax.annotate(label, xy = (0.2, 0.95), size = 11, xycoords = ax.transAxes)
+        
+    def plot_pair(df, range, size):
+        """
+        generates a pair plot that shows distribution of one variable and 
+        its relationship with other variables using scatter plot.
+
+        Args:
+            range: the range of variables to include in the chart
+            size: the size of the chart
+
+        Returns: None.
+        """
+        target = df["diagnosis"]
+        data = df.iloc[:,1:]
+        data = pd.concat([target,data.iloc[:,range[0]:range[1]]],axis=1)
+        plt.figure(figsize=(size[0],size[1]))
+        grid=sns.pairplot(data=data,kind ="scatter",hue="diagnosis",palette="Set1")
+        grid = grid.map_upper(corr)
