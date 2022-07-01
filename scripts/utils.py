@@ -119,7 +119,14 @@ class Utils:
 
     def scale_and_normalize(self, df):
         """
-        
+        Runs the scaler and normalizer together and returns scaled and normalized 
+        dataframe
+
+        Args: 
+            df: a dataframe with only numerical variables
+
+        Returns: 
+            normScaled: a dataframe with scaled and normalized variables 
         """
         columns = df.columns.to_list()
         normScaled = normalize(scale(df))
