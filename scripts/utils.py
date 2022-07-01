@@ -171,6 +171,30 @@ class Utils:
         return features_df
 
 
+    # random forest checker
+    def forest_test(features_r, target_r):
+        """
+        checkes the target prediction accuracy of a given set of features
+        and prints the accuracy.
+
+        Args:
+            features_r: features dataframe that is not scaled or normalized
+            target_r: target dataframe that is not encoded
+
+        Returns: None
+        
+        """
+        features = StandardScaler().fit_transform(features_r)
+        target = LabelEncoder().fit_transform(target_r)
+
+        X_Train, X_Test, Y_Train, Y_Test = train_test_split(features, target, 
+                                                            test_size = 0.30, 
+                                                            random_state = 11)
+        forest = RandomForestClassifier(n_estimators=700)
+        _ = forest.fit(X_Train, Y_Train)
+        print(f"accuracy score: {forest.score(X_Test, Y_Test)}")
+
+
     def corr(self, x, y, **kwargs):
         """
         calculates a correlation between two variables
