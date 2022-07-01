@@ -89,6 +89,15 @@ class Utils:
         return description
 
     def normalize(self, df):
+        """
+        normalizes a dataframe by making the mean of each variable 0 and their SD 1
+
+        Args:
+            df: a dataframe that holds only numerical variables
+
+        Returns:
+            normal: a normalized dataframe.
+        """
         normald = Normalizer()
         normal = pd.DataFrame(normald.fit_transform(df))
         return normal
