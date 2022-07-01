@@ -171,8 +171,35 @@ class Utils:
         return features_df
 
 
+    def select_features_RFE(self, features_r, target_r, num):
+        """
+        filters features using the Recurssive Feature Elimination method
+        that applies randomforest regressor as estimator
+
+        Args:
+            features_r: a dataframe of features with unscaled and unnormalized values
+            target_r: a series that contains target value in string form.
+            num: number of features to return
+
+        Returns:
+            new_features: a dataframe of selected features.
+        """
+        features = StandardScaler().fit_transform(features_r)
+        target = LabelEncoder().fit_transform(target_r)
+        # Init the transformer
+        rfe = RFE(estimator=RandomForestRegressor(), n_features_to_select=num)
+
+        # Fit to the training data
+        _ = rfe.fit(features, target)
+
+        # extract features
+        new_features = features_r.loc[:, rfe.support_]
+
+        return new_features
+
+
     # random forest checker
-    def forest_test(features_r, target_r):
+    def forest_test(self, features_r, target_r):
         """
         checkes the target prediction accuracy of a given set of features
         and prints the accuracy.
