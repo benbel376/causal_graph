@@ -314,8 +314,9 @@ class Utils:
         # Add the label to the plot
         ax = plt.gca()
         ax.annotate(label, xy = (0.2, 0.95), size = 11, xycoords = ax.transAxes)
+
         
-    def plot_pair(self, df, range, size, save=False, name=None):
+    def plot_pair(self, df, title, range, size, save=False, name=None):
         """
         generates a pair plot that shows distribution of one variable and 
         its relationship with other variables using scatter plot.
@@ -330,8 +331,10 @@ class Utils:
         data = df.iloc[:,1:]
         data = pd.concat([target,data.iloc[:,range[0]:range[1]]],axis=1)
         plt.figure(figsize=(size[0],size[1]))
+        plt.title(title)
         grid=sns.pairplot(data=data,kind ="scatter",hue="diagnosis",palette="Set1")
         grid = grid.map_upper(self.corr)
+        
 
         if(save):
             path = f"../data/images/{name}"
@@ -339,7 +342,7 @@ class Utils:
 
 
     
-    def show_corr(self, df, size=[17,10], range=None, save=False, name=None):
+    def show_corr(self, df, title, size=[17,10], range=None, save=False, name=None):
         """
         plots a correlation matrix heatmap
 
@@ -360,7 +363,37 @@ class Utils:
                 corr_matrix = df.iloc[:,range[0]:range[1]].corr()
         matrix = np.triu(corr_matrix)
         fig, ax = plt.subplots(figsize=(size[0], size[1]))
+        plt.title(title)
         ax = sns.heatmap(corr_matrix, annot=True, mask=matrix)
+        
+
+        if(save):
+            path = f"../data/images/{name}"
+            plt.savefig(path)
+
+
+
+    def plot_violin(self, df, size, title, save=False, name=None):
+        """
+        plots a violin graph
+
+        Args:
+            df: a dataframe that holds both the feature and target variables
+            size: a list that holds the size of the chart to be plotted
+            save: whether to savethe data or not.
+            name: name of the chart to save.
+
+        Returns: None
+        """
+        df.iloc[:,1:] = self.scale_and_normalize(df.iloc[:,1:]) 
+        data = pd.concat([df.iloc[:,:]],axis=1)
+        data = pd.melt(data,id_vars="diagnosis",
+                            var_name="features",
+                            value_name='value')
+        plt.figure(figsize=(size[0],size[1]))
+        plt.title(title)
+        sns.violinplot(x="features", y="value", hue="diagnosis", data=data,split=True, inner="quart",palette ="Set2")
+        plt.xticks(rotation=90)
 
         if(save):
             path = f"../data/images/{name}"
