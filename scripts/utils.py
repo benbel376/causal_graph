@@ -239,16 +239,49 @@ class Utils:
 
         return sm_copy
     
-    def plot_graph(sm, th):
+    def plot_graph(sm, th, title, name=None, save=False):
+        """
+        plots a structure model or causal graph by not including edges below the th.
+
+        Args:
+            sm: a causalnex structure model
+            th: a treshold to use as a reference to eleminate some week edges.
+            title: title for the image
+
+        Returns: Image object that holds the causal graph
+
+        """
+        path = f"../data/images/{name}"
         tmp = apply_treshold(sm, th)
         viz = plot_structure(
             tmp,
+            title=title,
             graph_attributes={"scale": "2.5", 'size': 2},
             all_node_attributes=NODE_STYLE.WEAK,
             all_edge_attributes=EDGE_STYLE.WEAK)
-        return Image(viz.draw(format='png'))
+        img = Image(viz.draw(format='png'))
+        
+        if(save):
+            path = f"../data/images/{name}"
+            img.save(path)
+
+        return img
 
     def jacc_index(sm1, sm2, th1, th2, formatted=True):
+        """
+        calculates jaccard similarity index between two causal graphs.
+
+        Args:
+            sm1: causal graph 1
+            sm2: causal graph 2
+            th1: threshold for first graph for elementation
+            th2: threshodl for second graph
+            formatted: weather to reurn a formated text or just index value
+
+        Returns:
+            sim: a similarity index
+            text: a formated information.
+        """
         sm1_copy = copy.deepcopy(sm1)
         sm2_copy = copy.deepcopy(sm2)
         sm1_copy.remove_edges_below_threshold(th1)
@@ -282,7 +315,7 @@ class Utils:
         ax = plt.gca()
         ax.annotate(label, xy = (0.2, 0.95), size = 11, xycoords = ax.transAxes)
         
-    def plot_pair(self, df, range, size):
+    def plot_pair(self, df, range, size, save=False, name=None):
         """
         generates a pair plot that shows distribution of one variable and 
         its relationship with other variables using scatter plot.
@@ -300,9 +333,13 @@ class Utils:
         grid=sns.pairplot(data=data,kind ="scatter",hue="diagnosis",palette="Set1")
         grid = grid.map_upper(self.corr)
 
+        if(save):
+            path = f"../data/images/{name}"
+            plt.savefig(path)
+
 
     
-    def show_corr(self, df, size=[17,10], range=None):
+    def show_corr(self, df, size=[17,10], range=None, save=False, name=None):
         """
         plots a correlation matrix heatmap
 
@@ -324,3 +361,7 @@ class Utils:
         matrix = np.triu(corr_matrix)
         fig, ax = plt.subplots(figsize=(size[0], size[1]))
         ax = sns.heatmap(corr_matrix, annot=True, mask=matrix)
+
+        if(save):
+            path = f"../data/images/{name}"
+            plt.savefig(path)
