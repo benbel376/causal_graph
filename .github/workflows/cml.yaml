@@ -14,7 +14,7 @@ jobs:
           pip install matplotlib
           pip install setuptools
           cml publish data/images/violin.png --md >> report.md
-          cml publish data/images/features_correlation.png --md >> report.md
+          cml publish data/images/correlation_matrix.png --md >> report.md
           cml publish data/images/ground_truth.png --md >> report.md
           cml publish data/images/importance_original.png --md >> report.md
           cml send-comment report.md
