@@ -1,0 +1,3 @@
+metric values for a logistic regression model created using filtered features: 
+{'accuracy': 0.77, 'precision': 0.84, 'recall': 0.55, 'f1': 0.67}
+

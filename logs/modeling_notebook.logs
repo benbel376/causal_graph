@@ -170,3 +170,293 @@ time: 2022-07-02 05:11:05,674, function: get_bayesian_net, module: utils, messag
 
 time: 2022-07-02 05:11:05,761, function: get_bayesian_net, module: utils, message: bn successfully generated 
 
+time: 2022-07-02 09:17:14,242, function: show_corr, module: utils, message: correlatin heatmap successfully generated 
+
+time: 2022-07-02 09:17:18,364, function: remove_correlated, module: utils, message: correlated variables successfully removed 
+
+time: 2022-07-02 09:17:22,219, function: forest_test, module: utils, message: forest test successful 
+
+time: 2022-07-02 09:17:27,674, function: select_features_RFE, module: utils, message: successfully selected features 
+
+time: 2022-07-02 09:17:30,566, function: forest_test, module: utils, message: forest test successful 
+
+time: 2022-07-02 09:17:30,671, function: scale, module: utils, message: variables scaled successfully 
+
+time: 2022-07-02 09:17:30,677, function: normalize, module: utils, message: variables normalized succesfully 
+
+time: 2022-07-02 09:17:30,679, function: scale_and_normalize, module: utils, message: variables successfully scaled and normalized 
+
+time: 2022-07-02 09:45:50,307, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 09:45:57,825, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 09:45:57,950, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 09:45:57,956, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 09:45:58,137, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 09:45:58,238, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 09:45:58,244, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 09:45:58,547, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 09:45:58,625, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 09:45:58,629, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 09:45:59,043, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 09:45:59,128, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 09:45:59,134, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 09:45:59,299, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 09:45:59,940, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 09:45:59,945, function: filter_by_blanket, module: utils, message: blanket successfully extracted 
+
+time: 2022-07-02 09:45:59,954, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 09:46:00,675, function: data_descretiser, module: utils, message: successfully descretised dataframe 
+
+time: 2022-07-02 09:46:00,709, function: data_descretiser, module: utils, message: successfully descretised dataframe 
+
+time: 2022-07-02 09:46:02,087, function: get_bayesian_net, module: utils, message: bn successfully generated 
+
+time: 2022-07-02 09:46:02,177, function: get_bayesian_net, module: utils, message: bn successfully generated 
+
+time: 2022-07-02 09:50:51,143, function: show_corr, module: utils, message: correlatin heatmap successfully generated 
+
+time: 2022-07-02 09:50:55,017, function: remove_correlated, module: utils, message: correlated variables successfully removed 
+
+time: 2022-07-02 09:50:57,372, function: forest_test, module: utils, message: forest test successful 
+
+time: 2022-07-02 09:51:02,064, function: select_features_RFE, module: utils, message: successfully selected features 
+
+time: 2022-07-02 09:51:04,581, function: forest_test, module: utils, message: forest test successful 
+
+time: 2022-07-02 09:51:04,666, function: scale, module: utils, message: variables scaled successfully 
+
+time: 2022-07-02 09:51:04,675, function: normalize, module: utils, message: variables normalized succesfully 
+
+time: 2022-07-02 09:51:04,677, function: scale_and_normalize, module: utils, message: variables successfully scaled and normalized 
+
+time: 2022-07-02 10:09:57,366, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:09:59,274, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 10:09:59,315, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 10:09:59,320, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:09:59,490, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 10:09:59,534, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 10:09:59,540, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:09:59,906, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 10:09:59,951, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 10:09:59,955, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:10:00,157, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 10:10:00,204, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 10:10:00,207, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:10:00,602, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 10:10:00,656, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:10:00,661, function: filter_by_blanket, module: utils, message: blanket successfully extracted 
+
+time: 2022-07-02 10:10:00,668, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:10:01,055, function: data_descretiser, module: utils, message: successfully descretised dataframe 
+
+time: 2022-07-02 10:10:01,099, function: data_descretiser, module: utils, message: successfully descretised dataframe 
+
+time: 2022-07-02 10:10:01,700, function: get_bayesian_net, module: utils, message: bn successfully generated 
+
+time: 2022-07-02 10:10:01,761, function: get_bayesian_net, module: utils, message: bn successfully generated 
+
+time: 2022-07-02 10:24:20,821, function: show_corr, module: utils, message: correlatin heatmap successfully generated 
+
+time: 2022-07-02 10:24:23,679, function: remove_correlated, module: utils, message: correlated variables successfully removed 
+
+time: 2022-07-02 10:24:25,882, function: forest_test, module: utils, message: forest test successful 
+
+time: 2022-07-02 10:24:31,367, function: select_features_RFE, module: utils, message: successfully selected features 
+
+time: 2022-07-02 10:24:33,426, function: forest_test, module: utils, message: forest test successful 
+
+time: 2022-07-02 10:24:33,544, function: scale, module: utils, message: variables scaled successfully 
+
+time: 2022-07-02 10:24:33,552, function: normalize, module: utils, message: variables normalized succesfully 
+
+time: 2022-07-02 10:24:33,554, function: scale_and_normalize, module: utils, message: variables successfully scaled and normalized 
+
+time: 2022-07-02 10:43:10,485, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:43:19,435, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 10:43:19,571, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 10:43:19,574, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:43:20,142, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 10:43:20,229, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 10:43:20,234, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:43:20,450, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 10:43:20,578, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 10:43:20,584, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:43:20,980, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 10:43:21,095, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 10:43:21,098, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:43:21,349, function: plot_graph, module: utils, message: graph failed to be generated 
+
+time: 2022-07-02 10:43:21,467, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:43:21,472, function: filter_by_blanket, module: utils, message: blanket successfully extracted 
+
+time: 2022-07-02 10:43:21,476, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 10:43:21,905, function: data_descretiser, module: utils, message: successfully descretised dataframe 
+
+time: 2022-07-02 10:43:22,001, function: data_descretiser, module: utils, message: successfully descretised dataframe 
+
+time: 2022-07-02 10:43:23,592, function: get_bayesian_net, module: utils, message: bn successfully generated 
+
+time: 2022-07-02 10:43:23,696, function: get_bayesian_net, module: utils, message: bn successfully generated 
+
+time: 2022-07-02 10:49:49,038, function: show_corr, module: utils, message: correlatin heatmap successfully generated 
+
+time: 2022-07-02 10:49:52,893, function: remove_correlated, module: utils, message: correlated variables successfully removed 
+
+time: 2022-07-02 10:49:55,669, function: forest_test, module: utils, message: forest test successful 
+
+time: 2022-07-02 10:50:00,439, function: select_features_RFE, module: utils, message: successfully selected features 
+
+time: 2022-07-02 10:50:02,576, function: forest_test, module: utils, message: forest test successful 
+
+time: 2022-07-02 10:50:02,666, function: scale, module: utils, message: variables scaled successfully 
+
+time: 2022-07-02 10:50:02,674, function: normalize, module: utils, message: variables normalized succesfully 
+
+time: 2022-07-02 10:50:02,676, function: scale_and_normalize, module: utils, message: variables successfully scaled and normalized 
+
+time: 2022-07-02 11:07:58,738, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:08:00,121, function: plot_graph, module: utils, message: graph successfully generated 
+
+time: 2022-07-02 11:08:00,253, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 11:08:00,257, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:08:00,458, function: plot_graph, module: utils, message: graph successfully generated 
+
+time: 2022-07-02 11:08:00,546, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 11:08:00,551, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:08:00,844, function: plot_graph, module: utils, message: graph successfully generated 
+
+time: 2022-07-02 11:08:00,928, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 11:08:00,932, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:08:01,113, function: plot_graph, module: utils, message: graph successfully generated 
+
+time: 2022-07-02 11:08:01,246, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 11:08:01,252, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:08:01,449, function: plot_graph, module: utils, message: graph successfully generated 
+
+time: 2022-07-02 11:08:01,546, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:08:01,567, function: filter_by_blanket, module: utils, message: blanket successfully extracted 
+
+time: 2022-07-02 11:08:01,572, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:08:03,190, function: data_descretiser, module: utils, message: successfully descretised dataframe 
+
+time: 2022-07-02 11:08:03,246, function: data_descretiser, module: utils, message: successfully descretised dataframe 
+
+time: 2022-07-02 11:08:06,046, function: get_bayesian_net, module: utils, message: bn successfully generated 
+
+time: 2022-07-02 11:08:06,135, function: get_bayesian_net, module: utils, message: bn successfully generated 
+
+time: 2022-07-02 11:13:23,822, function: show_corr, module: utils, message: correlatin heatmap successfully generated 
+
+time: 2022-07-02 11:13:27,392, function: remove_correlated, module: utils, message: correlated variables successfully removed 
+
+time: 2022-07-02 11:13:30,193, function: forest_test, module: utils, message: forest test successful 
+
+time: 2022-07-02 11:13:35,521, function: select_features_RFE, module: utils, message: successfully selected features 
+
+time: 2022-07-02 11:13:37,708, function: forest_test, module: utils, message: forest test successful 
+
+time: 2022-07-02 11:13:39,307, function: scale, module: utils, message: variables scaled successfully 
+
+time: 2022-07-02 11:13:39,314, function: normalize, module: utils, message: variables normalized succesfully 
+
+time: 2022-07-02 11:13:39,316, function: scale_and_normalize, module: utils, message: variables successfully scaled and normalized 
+
+time: 2022-07-02 11:33:16,922, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:33:18,939, function: plot_graph, module: utils, message: graph successfully generated 
+
+time: 2022-07-02 11:33:19,035, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 11:33:19,038, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:33:19,399, function: plot_graph, module: utils, message: graph successfully generated 
+
+time: 2022-07-02 11:33:19,558, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 11:33:19,563, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:33:19,967, function: plot_graph, module: utils, message: graph successfully generated 
+
+time: 2022-07-02 11:33:20,300, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 11:33:20,305, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:33:20,653, function: plot_graph, module: utils, message: graph successfully generated 
+
+time: 2022-07-02 11:33:20,853, function: jacc_index, module: utils, message: jaccard index successfully calculated 
+
+time: 2022-07-02 11:33:20,857, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:33:21,210, function: plot_graph, module: utils, message: graph successfully generated 
+
+time: 2022-07-02 11:33:21,442, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:33:21,512, function: filter_by_blanket, module: utils, message: blanket successfully extracted 
+
+time: 2022-07-02 11:33:21,518, function: apply_treshold, module: utils, message: treshold successfully applied 
+
+time: 2022-07-02 11:33:22,041, function: data_descretiser, module: utils, message: successfully descretised dataframe 
+
+time: 2022-07-02 11:33:22,104, function: data_descretiser, module: utils, message: successfully descretised dataframe 
+
+time: 2022-07-02 11:33:23,425, function: get_bayesian_net, module: utils, message: bn successfully generated 
+
+time: 2022-07-02 11:33:23,551, function: get_bayesian_net, module: utils, message: bn successfully generated 
+

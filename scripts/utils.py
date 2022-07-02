@@ -25,9 +25,12 @@ from causalnex.inference import InferenceEngine
 
 from IPython.display import Image
 import copy
+import mlflow
 from sklearn.metrics import classification_report,confusion_matrix
 from sklearn.feature_selection import RFE
 from sklearn.ensemble import RandomForestRegressor
+
+from sklearn.metrics import recall_score, f1_score, accuracy_score, precision_score
 
 import logging
 
@@ -422,67 +425,6 @@ class Utils:
 
 
 
-    def create_run(self, exp, run):
-        """
-        instantiates a new run 
-            
-        Args:
-            exp: the name of the experiment
-            run: the name of the run
-
-        Returns:
-            mlflow_run: mlflow run object
-        """
-        try:
-            experiment_id = mlflow.create_experiment(name=EXP_NAME)
-        except:
-            experiment_id = mlflow.get_experiment_by_name(name=EXP_NAME).experiment_id
-        # Run name is a string that does not have to be unique
-        mlflow_run = mlflow.start_run(experiment_id=experiment_id, run_name=RUN_NAME)
-
-        return mlflow_run
-
-
-
-######################################################################################
-##                               plotting methods                                   ##
-######################################################################################
-
-    def plot_graph(self, sm, th, name=None, save=False):
-        """
-        plots a structure model or causal graph by not including edges below the th.
-
-        Args:
-            sm: a causalnex structure model
-            th: a treshold to use as a reference to eleminate some week edges.
-            title: title for the image
-
-        Returns: Image object that holds the causal graph
-
-        """
-        try:
-            path = f"../data/images/{name}"
-            tmp = self.apply_treshold(sm, th)
-            viz = plot_structure(
-                tmp,
-                graph_attributes={"scale": "2.5", 'size': 2},
-                all_node_attributes=NODE_STYLE.WEAK,
-                all_edge_attributes=EDGE_STYLE.WEAK)
-            img = Image(viz.draw(format='png'))
-            
-            if(save):
-                path = f"../data/images/{name}"
-                img.save(path)
-
-            logger.info("graph successfully generated")
-            
-            return img
-
-        except:
-            logger.warning("graph failed to be generated")
-
-
-
     def jacc_index(self, sm1, sm2, th1, th2, formatted=True):
         """
         calculates jaccard similarity index between two causal graphs.
@@ -517,6 +459,108 @@ class Utils:
 
         except:
             logger.warning("jaccard index failed to be calcuated")
+
+
+
+    def create_run(self, exp, run):
+        """
+        instantiates a new run 
+            
+        Args:
+            exp: the name of the experiment
+            run: the name of the run
+
+        Returns:
+            mlflow_run: mlflow run object
+        """
+        try:
+            experiment_id = mlflow.create_experiment(name=exp)
+        except:
+            experiment_id = mlflow.get_experiment_by_name(name=exp).experiment_id
+        # Run name is a string that does not have to be unique
+        mlflow_run = mlflow.start_run(experiment_id=experiment_id, run_name=run)
+
+        return mlflow_run
+
+
+    def get_metrics(self, y_true, y_pred):
+        """
+        returns metric values for a given model prediction
+        Args:
+            y_true: true value
+            y_pred: predicted value
+
+        Returns:
+            values for different metrics fortmatted as dictionary.
+        """
+        acc = accuracy_score(y_true, y_pred)
+        prec = precision_score(y_true, y_pred)
+        recall = recall_score(y_true, y_pred)
+        f1 = f1_score(y_true, y_pred)
+        return {'accuracy': round(acc, 2), 'precision': round(prec, 2), 'recall': round(recall, 2), 'f1': round(f1, 2)}
+
+    # log model metrics with MLflow
+    def mlflow_log(self, experiment_name, run_name, run_metrics, run_params=None):
+        mlrun = self.create_run(experiment_name, run_name)
+        with mlrun:
+            if not run_params == None:
+                for name in run_params:
+                    mlflow.log_param(run_params[name])
+            for name in run_metrics:
+                mlflow.log_metric(name, run_metrics[name])
+            
+        print('Run - %s is logged to Experiment - %s' %(run_name, experiment_name))
+
+
+
+######################################################################################
+##                               plotting methods                                   ##
+######################################################################################
+
+    def plot_graph(self, sm, th, save=False, name=None):
+        """
+        plots a structure model or causal graph by not including edges below the th.
+
+        Args:
+            sm: a causalnex structure model
+            th: a treshold to use as a reference to eleminate some week edges.
+            title: title for the image
+
+        Returns: Image object that holds the causal graph
+
+        """
+        try:
+            path = f"../data/images/{name}"
+            tmp = self.apply_treshold(sm, th)
+            viz = plot_structure(
+                tmp,
+                graph_attributes={"scale": "2.5", 'size': 2},
+                all_node_attributes=NODE_STYLE.WEAK,
+                all_edge_attributes=EDGE_STYLE.WEAK)
+            img = Image(viz.draw(format='png'))
+            
+            # if(save):
+            #     with open(path, "wb") as png:
+            #         png.write(img)
+
+            logger.info("graph successfully generated")
+            
+            return img
+
+        except:
+            logger.warning("graph failed to be generated")
+
+    def show_importance(self, model, cols, size, save = False, name = None):
+        importance = model.coef_[0]
+
+        f = plt.figure()
+        f.set_figwidth(size[0])
+        f.set_figheight(size[1])
+        plt.bar(x=cols, height=importance)
+        if(save):
+            path = f"../data/images/{name}"
+            plt.savefig(path)
+        plt.show()
 
 
     def corr(self, x, y, **kwargs):
@@ -609,8 +653,6 @@ class Utils:
             logger.warning("correlation heatmap could not be generated")    
 
         
-
-
 
     def plot_violin(self, df, size, title, save=False, name=None):
         """
