@@ -443,6 +443,35 @@ class Utils:
         return mlflow_run
 
 
+    def get_metrics(self, y_true, y_pred):
+        """
+        returns metric values for a given model prediction
+        Args:
+            y_true: true value
+            y_pred: predicted value
+
+        Returns:
+            values for different metrics fortmatted as dictionary.
+        """
+        acc = accuracy_score(y_true, y_pred)
+        prec = precision_score(y_true, y_pred)
+        recall = recall_score(y_true, y_pred)
+        f1 = f1_score(y_true, y_pred)
+        return {'accuracy': round(acc, 2), 'precision': round(prec, 2), 'recall': round(recall, 2), 'f1': round(f1, 2)}
+
+    # log model metrics with MLflow
+    def mlflow_log(self, experiment_name, run_name, run_metrics, run_params=None):
+        mlflow.set_experiment(experiment_name)
+        with mlflow.start_run(run_name=run_name):
+            if not run_params == None:
+                for name in run_params:
+                    mlflow.log_param(run_params[name])
+            for name in run_metrics:
+                mlflow.log_metric(name, run_metrics[name])
+            
+        print('Run - %s is logged to Experiment - %s' %(run_name, experiment_name))
+
+
 
 ######################################################################################
 ##                               plotting methods                                   ##
@@ -481,7 +510,15 @@ class Utils:
         except:
             logger.warning("graph failed to be generated")
 
+    def show_importance(self, model, size):
+        importance = model.coef_[0]
+        cols = original_x.columns.to_list()
 
+        f = plt.figure()
+        f.set_figwidth(size[0])
+        f.set_figheight(size[1])
+        plt.bar(x=cols, height=importance)
+        plt.show()
 
     def jacc_index(self, sm1, sm2, th1, th2, formatted=True):
         """
