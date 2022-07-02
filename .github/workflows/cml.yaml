@@ -1,4 +1,4 @@
-name: model-training
+name: causal graphs
 on: [push]
 jobs:
   run:
@@ -7,11 +7,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: iterative/setup-cml@v1
-      - name: EDA analysis
+      - name: causal graphs
         run: |
           # work
-          cat data/outputs/output.txt >> report.md
-          cml publish data/images/assortment_sales_customers.png --md >> report.md
-          cml publish data/images/sales_cust_corr.png --md >> report.md
-          cml publish data/images/train_promo_dist2.png --md >> report.md
+          cat ../data/outputs/output.txt >> report.md
+          cml publish ../data/images/features_correlation.png --md >> report.md
+          cml publish ../data/images/ground_truth.png --md >> report.md
+          cml publish ../data/images/importance_original --md >> report.md
           cml send-comment report.md

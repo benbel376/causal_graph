@@ -1,0 +1,4 @@
+artifact_location: file:///C:/10/week8/causal_graph/notebooks/mlruns/1
+experiment_id: '1'
+lifecycle_stage: active
+name: regression_exp
