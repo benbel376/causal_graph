@@ -1,4 +1,4 @@
-name: causal graphs
+name: cml
 on: [push]
 jobs:
   run:
@@ -7,10 +7,12 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: iterative/setup-cml@v1
-      - name: causal graphs
+      - name: cml
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # work
-          cat data/outputs/output.txt >> report.md
+          pip install matplotlib
+          pip install setuptools
           cml publish data/images/violin.png --md >> report.md
           cml publish data/images/features_correlation.png --md >> report.md
           cml publish data/images/ground_truth.png --md >> report.md
