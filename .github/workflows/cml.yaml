@@ -1,0 +1,17 @@
+name: model-training
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: iterative/setup-cml@v1
+      - name: EDA analysis
+        run: |
+          # work
+          cat data/outputs/output.txt >> report.md
+          cml publish data/images/assortment_sales_customers.png --md >> report.md
+          cml publish data/images/sales_cust_corr.png --md >> report.md
+          cml publish data/images/train_promo_dist2.png --md >> report.md
+          cml send-comment report.md
