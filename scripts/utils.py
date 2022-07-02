@@ -16,6 +16,12 @@ from causalnex.structure import DAGRegressor
 from causalnex.inference import InferenceEngine
 from causalnex.network import BayesianNetwork
 from causalnex.network.sklearn import BayesianNetworkClassifier
+from causalnex.discretiser.discretiser_strategy import (
+    DecisionTreeSupervisedDiscretiserMethod,
+)
+from causalnex.network import BayesianNetwork
+from causalnex.inference import InferenceEngine
+
 
 from IPython.display import Image
 import copy
@@ -209,7 +215,7 @@ class Utils:
             correlated_features = set()
             for i in range(len(corrmat.columns)):
                 for j in range(i):
-                    if abs(corrmat.iloc[i, j]) >= th:
+                    if abs(corrmat.iloc[i, j]) > th:
                         colname = corrmat.columns[i]
                         correlated_features.add(colname)
 
@@ -315,7 +321,82 @@ class Utils:
             logger.warning("treshold failed to be applied")
 
     
-    def get_bayesian_net(df, train, sm):
+
+    def data_descretiser(self, df, features_list, target_name):
+        """
+        it descretises floating point values to integer
+
+        Args:
+            df: dataframe with all variables
+            features_list: a list that holds features name
+            target: the target name
+
+        Returns:
+            desc_df: descretised dataframe.
+        """
+
+        try:
+            tree_discretiser = DecisionTreeSupervisedDiscretiserMethod(
+                mode="single", 
+                tree_params={"max_depth": 2, "random_state": 2022},
+            )
+            tree_discretiser.fit(
+                feat_names=features_list, 
+                dataframe=df, 
+                target_continuous=True,
+                target=target_name,
+            )
+
+            desc_df = df.copy()
+            for col in features_list:
+                desc_df[col] = tree_discretiser.transform(desc_df[[col]])
+            
+            logger.info("successfully descretised dataframe")
+
+            return desc_df
+
+        except:
+            logger.warning("failed to descretise")
+
+
+
+    def filter_by_blanket(self, sm, features, node):
+        """
+        extracts markov blanket and fitlers features with it
+
+        Args:
+            sm: structural model
+            features: a dataframe with all variables
+            node: the target node name in string
+
+        Returns:
+            compact_feats: the data with selected features
+        """
+        try:
+            blanket = sm.get_markov_blanket(node)
+            print(blanket.edges)
+
+            parents = set()
+            for item in blanket.edges:
+                for val in item:
+                    if(val != "target"):
+                        parents.add(val)
+
+            parents = list(parents)
+            print(f"selected variables: {parents}")
+
+            compact_feats = features[parents] 
+
+            logger.info("blanket successfully extracted")
+
+            return [compact_feats, blanket]
+        
+        except:
+            logger.warning("blanket failed to be extracted")
+
+
+
+    def get_bayesian_net(self, df, train, sm):
         """
         it returns a bayesian network for a given dataset and graph
         Args:
@@ -338,6 +419,28 @@ class Utils:
             return bn
         except:
             logger.warning("bn generation failed")
+
+
+
+    def create_run(self, exp, run):
+        """
+        instantiates a new run 
+            
+        Args:
+            exp: the name of the experiment
+            run: the name of the run
+
+        Returns:
+            mlflow_run: mlflow run object
+        """
+        try:
+            experiment_id = mlflow.create_experiment(name=EXP_NAME)
+        except:
+            experiment_id = mlflow.get_experiment_by_name(name=EXP_NAME).experiment_id
+        # Run name is a string that does not have to be unique
+        mlflow_run = mlflow.start_run(experiment_id=experiment_id, run_name=RUN_NAME)
+
+        return mlflow_run
 
 
 
