@@ -5,11 +5,37 @@ from sklearn.preprocessing import Normalizer, MinMaxScaler
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+import causalnex
+from causalnex.structure.notears import from_pandas
+from causalnex.plots import plot_structure, NODE_STYLE, EDGE_STYLE
+from causalnex.discretiser import Discretiser
+from causalnex.structure import DAGRegressor
+from causalnex.inference import InferenceEngine
+from causalnex.network import BayesianNetwork
+from causalnex.network.sklearn import BayesianNetworkClassifier
+
+from IPython.display import Image
+import copy
+from sklearn.metrics import classification_report,confusion_matrix
+from sklearn.feature_selection import RFE
+from sklearn.ensemble import RandomForestRegressor
+
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 class Utils:
     
-    def __init__(self):
-        pass
+    def __init__(self, filehandler):
+        file_handler = logging.FileHandler(filehandler)
+        formatter = logging.Formatter("time: %(asctime)s, function: %(funcName)s, module: %(name)s, message: %(message)s \n")
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+
 
     def check_outlier(self, df):
         """
@@ -23,55 +49,61 @@ class Utils:
             a new dataframe with a count of minor and major outliers
         
         """
-        tmp_info = df.describe()
+        try:
+            tmp_info = df.describe()
 
-        Q1 = np.array(tmp_info.iloc[4,:].values.flatten().tolist())
-        Q3 = np.array(tmp_info.iloc[6,:].values.flatten().tolist())
+            Q1 = np.array(tmp_info.iloc[4,:].values.flatten().tolist())
+            Q3 = np.array(tmp_info.iloc[6,:].values.flatten().tolist())
 
-        # calculate the Inerquartile range.
-        IQR = Q3-Q1
-        L_factor = IQR*1.5
-        H_factor = IQR*3
+            # calculate the Inerquartile range.
+            IQR = Q3-Q1
+            L_factor = IQR*1.5
+            H_factor = IQR*3
 
-        # Minor Outliers will lie outside the Inner fence
-        Inner_Low = Q1-L_factor
-        Inner_High = Q3 + L_factor
-        inner_fence = [Inner_Low, Inner_High]
+            # Minor Outliers will lie outside the Inner fence
+            Inner_Low = Q1-L_factor
+            Inner_High = Q3 + L_factor
+            inner_fence = [Inner_Low, Inner_High]
 
-        # Major Outliers will lie outside the Outer fence
-        Outer_Low = Q1-H_factor
-        Outer_High = Q3+H_factor
-        outer_fence = [Outer_Low, Outer_High]
-        
-        outliers = []
-        for col_index in range(df.shape[1]):
+            # Major Outliers will lie outside the Outer fence
+            Outer_Low = Q1-H_factor
+            Outer_High = Q3+H_factor
+            outer_fence = [Outer_Low, Outer_High]
             
-            inner_count = 0
-            outer_count = 0
-            tmp_list = df.iloc[:,col_index].tolist()
-            for value in tmp_list:
-                if((value < inner_fence[0][col_index]) or (value > inner_fence[1][col_index])):
-                    inner_count = inner_count + 1
-                elif((value < outer_fence[0][col_index]) or (value > outer_fence[1][col_index])):
-                    outer_count = outer_count + 1
+            outliers = []
+            for col_index in range(df.shape[1]):
+                
+                inner_count = 0
+                outer_count = 0
+                tmp_list = df.iloc[:,col_index].tolist()
+                for value in tmp_list:
+                    if((value < inner_fence[0][col_index]) or (value > inner_fence[1][col_index])):
+                        inner_count = inner_count + 1
+                    elif((value < outer_fence[0][col_index]) or (value > outer_fence[1][col_index])):
+                        outer_count = outer_count + 1
 
-            outliers.append({df.columns[col_index]:[inner_count, outer_count]})
-        
-        major_outlier = []
-        minor_outlier = []
-        columns = []
-        outlier_dict = {}
-        for item in outliers:
-            columns.append(list(item.keys())[0])
-            minor_outlier.append(list(item.values())[0][0])
-            major_outlier.append(list(item.values())[0][1])
+                outliers.append({df.columns[col_index]:[inner_count, outer_count]})
+            
+            major_outlier = []
+            minor_outlier = []
+            columns = []
+            outlier_dict = {}
+            for item in outliers:
+                columns.append(list(item.keys())[0])
+                minor_outlier.append(list(item.values())[0][0])
+                major_outlier.append(list(item.values())[0][1])
 
-        outlier_dict["columns"] = columns
-        outlier_dict["minor_outlier"] = minor_outlier
-        outlier_dict["major_outlier"] = major_outlier
-        outlier_df = pd.DataFrame(outlier_dict)
+            outlier_dict["columns"] = columns
+            outlier_dict["minor_outlier"] = minor_outlier
+            outlier_dict["major_outlier"] = major_outlier
+            outlier_df = pd.DataFrame(outlier_dict)
 
-        return outlier_df
+            logger.Info("outlier dataframe successfully generated")
+
+            return outlier_df
+
+        except:
+            logger.warning("could not generate outlier information")
 
 
 
@@ -85,11 +117,17 @@ class Utils:
         Returns:
             description: a dataframe that holds statistical information about the variables
         """
-        description = df.describe().T.style.bar(subset=['mean'], color='#205ff2')\
-                            .background_gradient(subset=['std'], cmap='Reds')\
-                            .background_gradient(subset=['50%'], cmap='coolwarm')
-
-        return description
+        try:
+            description = df.describe().T.style.bar(subset=['mean'], color='#205ff2')\
+                                .background_gradient(subset=['std'], cmap='Reds')\
+                                .background_gradient(subset=['50%'], cmap='coolwarm')
+        
+            logger.info("description generated succesfully")
+            
+            return description
+        
+        except:
+            logger.warning("could not generate description")
 
 
 
@@ -105,6 +143,8 @@ class Utils:
         """
         normald = Normalizer()
         normal = pd.DataFrame(normald.fit_transform(df))
+
+        logger.info("variables normalized succesfully")
 
         return normal
 
@@ -123,6 +163,8 @@ class Utils:
         scaler = MinMaxScaler()
         scaled = pd.DataFrame(scaler.fit_transform(df))
 
+        logger.info("variables scaled successfully")
+
         return scaled
 
     def scale_and_normalize(self, df):
@@ -136,11 +178,19 @@ class Utils:
         Returns: 
             normScaled: a dataframe with scaled and normalized variables 
         """
-        columns = df.columns.to_list()
-        normScaled = self.normalize(self.scale(df))
-        normScaled.columns = columns
+        try:
+            columns = df.columns.to_list()
+            normScaled = self.normalize(self.scale(df))
+            normScaled.columns = columns
 
-        return normScaled
+            logger.info("variables successfully scaled and normalized")
+            
+            return normScaled
+        
+        except:
+            logger.warning("could not scale and normalize")
+
+        
 
 
     def remove_correlated(self, df, th):
@@ -154,21 +204,28 @@ class Utils:
         Return:
             features_df: a new features dataframe with low correlation values. 
         """
-        corrmat = df.corr()
-        correlated_features = set()
-        for i in range(len(corrmat.columns)):
-            for j in range(i):
-                if abs(corrmat.iloc[i, j]) >= th:
-                    colname = corrmat.columns[i]
-                    correlated_features.add(colname)
+        try:
+            corrmat = df.corr()
+            correlated_features = set()
+            for i in range(len(corrmat.columns)):
+                for j in range(i):
+                    if abs(corrmat.iloc[i, j]) >= th:
+                        colname = corrmat.columns[i]
+                        correlated_features.add(colname)
 
-        print(f"number of correlated variables: {len(correlated_features)}")
-        print("..................................................")
-        print("correlated features: ", correlated_features)
+            print(f"number of correlated variables: {len(correlated_features)}")
+            print("..................................................")
+            print("correlated features: ", correlated_features)
 
-        features_df = df.drop(labels=correlated_features, axis=1)
+            features_df = df.drop(labels=correlated_features, axis=1)
 
-        return features_df
+            logger.info("correlated variables successfully removed")
+
+            return features_df
+
+        except:
+            logger.warning("could not remove highly correlated variables")
+
 
 
     def select_features_RFE(self, features_r, target_r, num):
@@ -184,18 +241,24 @@ class Utils:
         Returns:
             new_features: a dataframe of selected features.
         """
-        features = StandardScaler().fit_transform(features_r)
-        target = LabelEncoder().fit_transform(target_r)
-        # Init the transformer
-        rfe = RFE(estimator=RandomForestRegressor(), n_features_to_select=num)
+        try:
+            features = StandardScaler().fit_transform(features_r)
+            target = LabelEncoder().fit_transform(target_r)
+            # Init the transformer
+            rfe = RFE(estimator=RandomForestRegressor(), n_features_to_select=num)
 
-        # Fit to the training data
-        _ = rfe.fit(features, target)
+            # Fit to the training data
+            _ = rfe.fit(features, target)
 
-        # extract features
-        new_features = features_r.loc[:, rfe.support_]
+            # extract features
+            new_features = features_r.loc[:, rfe.support_]
+            logger.info("successfully selected features")
 
-        return new_features
+            return new_features
+
+        except:
+            logger.warning("selection failed")
+
 
 
     # random forest checker
@@ -211,16 +274,22 @@ class Utils:
         Returns: None
         
         """
-        features = StandardScaler().fit_transform(features_r)
-        target = LabelEncoder().fit_transform(target_r)
+        try:
+            features = StandardScaler().fit_transform(features_r)
+            target = LabelEncoder().fit_transform(target_r)
 
-        X_Train, X_Test, Y_Train, Y_Test = train_test_split(features, target, 
-                                                            test_size = 0.30, 
-                                                            random_state = 11)
-        forest = RandomForestClassifier(n_estimators=700)
-        _ = forest.fit(X_Train, Y_Train)
-        print(f"accuracy score: {forest.score(X_Test, Y_Test)}")
+            X_Train, X_Test, Y_Train, Y_Test = train_test_split(features, target, 
+                                                                test_size = 0.30, 
+                                                                random_state = 11)
+            forest = RandomForestClassifier(n_estimators=700)
+            _ = forest.fit(X_Train, Y_Train)
+            print(f"accuracy score: {forest.score(X_Test, Y_Test)}")
+            
+            logger.info("forest test successful")
+        except:
+            logger.warning("random forest classifier failed")
 
+        
 
     def apply_treshold(self, sm, th):
         """
@@ -234,12 +303,22 @@ class Utils:
             sm_copy: a new causalnex structure model with some  week edges removed.
         
         """
-        sm_copy = copy.deepcopy(sm)
-        sm_copy.remove_edges_below_threshold(th)
+        try:
+            sm_copy = copy.deepcopy(sm)
+            sm_copy.remove_edges_below_threshold(th)
 
-        return sm_copy
-    
-    def plot_graph(self, sm, th, title, name=None, save=False):
+            logger.info("treshold successfully applied")
+
+            return sm_copy
+
+        except:
+            logger.warning("treshold failed to be applied")
+
+######################################################################################
+##                               plotting methods                                   ##
+######################################################################################
+
+    def plot_graph(self, sm, th, name=None, save=False):
         """
         plots a structure model or causal graph by not including edges below the th.
 
@@ -251,21 +330,26 @@ class Utils:
         Returns: Image object that holds the causal graph
 
         """
-        path = f"../data/images/{name}"
-        tmp = self.apply_treshold(sm, th)
-        viz = plot_structure(
-            tmp,
-            title=title,
-            graph_attributes={"scale": "2.5", 'size': 2},
-            all_node_attributes=NODE_STYLE.WEAK,
-            all_edge_attributes=EDGE_STYLE.WEAK)
-        img = Image(viz.draw(format='png'))
-        
-        if(save):
+        try:
             path = f"../data/images/{name}"
-            img.save(path)
+            tmp = self.apply_treshold(sm, th)
+            viz = plot_structure(
+                tmp,
+                graph_attributes={"scale": "2.5", 'size': 2},
+                all_node_attributes=NODE_STYLE.WEAK,
+                all_edge_attributes=EDGE_STYLE.WEAK)
+            img = Image(viz.draw(format='png'))
+            
+            if(save):
+                path = f"../data/images/{name}"
+                img.save(path)
 
-        return img
+            logger.info("graph successfully generated")
+            
+            return img
+
+        except:
+            logger.warning("graph failed to be generated")
 
 
 
@@ -284,18 +368,25 @@ class Utils:
             sim: a similarity index
             text: a formated information.
         """
-        sm1_copy = copy.deepcopy(sm1)
-        sm2_copy = copy.deepcopy(sm2)
-        sm1_copy.remove_edges_below_threshold(th1)
-        sm2_copy.remove_edges_below_threshold(th2)
-        a = sm1_copy.edges
-        b = sm2_copy.edges
-        n = set(a).intersection(b)
-        sim = round(len(n) / (len(a) + len(b) - len(n)), 2)
-        if(formatted):
-            return f"The similarity index: {sim}"
-        else:
-            return sim 
+        try:
+            sm1_copy = copy.deepcopy(sm1)
+            sm2_copy = copy.deepcopy(sm2)
+            sm1_copy.remove_edges_below_threshold(th1)
+            sm2_copy.remove_edges_below_threshold(th2)
+            a = sm1_copy.edges
+            b = sm2_copy.edges
+            n = set(a).intersection(b)
+            sim = round(len(n) / (len(a) + len(b) - len(n)), 2)
+
+            logger.info("jaccard index successfully calculated")
+
+            if(formatted):
+                return f"The similarity index: {sim}"
+            else:
+                return sim 
+
+        except:
+            logger.warning("jaccard index failed to be calcuated")
 
 
     def corr(self, x, y, **kwargs):
@@ -329,20 +420,27 @@ class Utils:
 
         Returns: None.
         """
-        target = df["diagnosis"]
-        data = df.iloc[:,1:]
-        data = pd.concat([target,data.iloc[:,range[0]:range[1]]],axis=1)
-        plt.figure(figsize=(size[0],size[1]))
-        grid=sns.pairplot(data=data,kind ="scatter",hue="diagnosis",palette="Set1")
-        grid.fig.suptitle(title)
-        grid = grid.map_upper(self.corr)
-        
+        try:
+            target = df["diagnosis"]
+            data = df.iloc[:,1:]
+            data = pd.concat([target,data.iloc[:,range[0]:range[1]]],axis=1)
+            plt.figure(figsize=(size[0],size[1]))
+            grid=sns.pairplot(data=data,kind ="scatter",hue="diagnosis",palette="Set1")
+            grid.fig.suptitle(title)
+            grid = grid.map_upper(self.corr)
 
-        if(save):
-            path = f"../data/images/{name}"
-            plt.savefig(path)
+            
 
-        plt.show()
+            if(save):
+                path = f"../data/images/{name}"
+                plt.savefig(path)
+
+            plt.show()
+            
+            logger.info("pair-plot successfully generated") 
+
+        except:
+            logger.warning("pair-plot failed to be generated")  
 
 
     
@@ -357,23 +455,30 @@ class Utils:
 
         Returns: None
         """
-        # correlation matrix
-        if range is None:
-            corr_matrix = df.corr()
-        else:
-            if(range[1] == -10):
-                corr_matrix = df.iloc[:,range[0]:].corr()
+        try:
+            # correlation matrix
+            if range is None:
+                corr_matrix = df.corr()
             else:
-                corr_matrix = df.iloc[:,range[0]:range[1]].corr()
-        matrix = np.triu(corr_matrix)
-        fig, ax = plt.subplots(figsize=(size[0], size[1]))
-        plt.title(title)
-        ax = sns.heatmap(corr_matrix, annot=True, mask=matrix)
-        
+                if(range[1] == -10):
+                    corr_matrix = df.iloc[:,range[0]:].corr()
+                else:
+                    corr_matrix = df.iloc[:,range[0]:range[1]].corr()
+            matrix = np.triu(corr_matrix)
+            fig, ax = plt.subplots(figsize=(size[0], size[1]))
+            plt.title(title)
+            ax = sns.heatmap(corr_matrix, annot=True, mask=matrix)
 
-        if(save):
-            path = f"../data/images/{name}"
-            plt.savefig(path)
+            if(save):
+                path = f"../data/images/{name}"
+                plt.savefig(path)
+            
+            logger.info("correlatin heatmap successfully generated")
+
+        except:
+            logger.warning("correlation heatmap could not be generated")    
+
+        
 
 
 
@@ -389,17 +494,23 @@ class Utils:
 
         Returns: None
         """
-        df = df.copy()
-        df.iloc[:,1:] = self.scale_and_normalize(df.iloc[:,1:]) 
-        data = pd.concat([df.iloc[:,:]],axis=1)
-        data = pd.melt(data,id_vars="diagnosis",
-                            var_name="features",
-                            value_name='value')
-        plt.figure(figsize=(size[0],size[1]))
-        plt.title(title)
-        sns.violinplot(x="features", y="value", hue="diagnosis", data=data,split=True, inner="quart",palette ="Set2")
-        plt.xticks(rotation=90)
+        try:
+            df = df.copy()
+            df.iloc[:,1:] = self.scale_and_normalize(df.iloc[:,1:]) 
+            data = pd.concat([df.iloc[:,:]],axis=1)
+            data = pd.melt(data,id_vars="diagnosis",
+                                var_name="features",
+                                value_name='value')
+            plt.figure(figsize=(size[0],size[1]))
+            plt.title(title)
+            sns.violinplot(x="features", y="value", hue="diagnosis", data=data,split=True, inner="quart",palette ="Set2")
+            plt.xticks(rotation=90)
 
-        if(save):
-            path = f"../data/images/{name}"
-            plt.savefig(path)
+            if(save):
+                path = f"../data/images/{name}"
+                plt.savefig(path)
+
+            logger.info("violin successfully generated")
+
+        except:
+            logger.warning("violin failed")

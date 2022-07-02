@@ -1,0 +1,18 @@
+time: 2022-07-01 14:58:21,219, function: check_outlier, module: utils, message: could not generate outlier information 
+
+time: 2022-07-01 14:58:22,326, function: describe, module: utils, message: description generated succesfully 
+
+time: 2022-07-01 14:58:23,325, function: scale, module: utils, message: variables scaled successfully 
+
+time: 2022-07-01 14:58:23,336, function: normalize, module: utils, message: variables normalized succesfully 
+
+time: 2022-07-01 14:58:23,339, function: scale_and_normalize, module: utils, message: variables successfully scaled and normalized 
+
+time: 2022-07-01 14:58:26,227, function: plot_violin, module: utils, message: violin successfully generated 
+
+time: 2022-07-01 14:59:13,254, function: plot_pair, module: utils, message: pair-plot successfully generated 
+
+time: 2022-07-01 14:59:47,292, function: plot_pair, module: utils, message: pair-plot successfully generated 
+
+time: 2022-07-01 14:59:49,202, function: show_corr, module: utils, message: correlatin heatmap successfully generated 
+
