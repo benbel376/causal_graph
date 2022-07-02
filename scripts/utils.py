@@ -314,6 +314,33 @@ class Utils:
         except:
             logger.warning("treshold failed to be applied")
 
+    
+    def get_bayesian_net(df, train, sm):
+        """
+        it returns a bayesian network for a given dataset and graph
+        Args:
+            df: dataframe that holds all variables
+            train: training split
+            sm: graph
+        
+        Returns:
+            bn: a bayesian network
+        """
+        try:
+            bn = BayesianNetwork(sm)
+            bn = bn.fit_node_states(df)
+            bn = bn.fit_cpds(
+                train, 
+                method="BayesianEstimator", 
+                bayes_prior="K2",
+            )
+            logger.info("bn successfully generated")
+            return bn
+        except:
+            logger.warning("bn generation failed")
+
+
+
 ######################################################################################
 ##                               plotting methods                                   ##
 ######################################################################################
