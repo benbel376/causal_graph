@@ -18,7 +18,7 @@
 ## Install
 
 ```
-git clone https://github.com/Micky373/causal_inference.git
+git clone https://github.com/benbel376/causal_inference.git
 cd causal_inference
 pip install -r requirements.txt
 ```
